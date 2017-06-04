@@ -3,33 +3,35 @@
 #include <cstdio>
 #include <cstring>
 #include <limits>
+#include <sstream>
 #include "matrixChainMultiplication.h"
 using namespace std;
 
-MatrixChainMultiplication(size_t N) {
+MatrixChainMultiplication::MatrixChainMultiplication(size_t N) {
+   _matrixNum = 0;
    _matrixSpace = N * N * sizeof(int);
-   _costMatrix = (int*) malloc(matrixSpace);
-   _indexMatrix = (int*) malloc(matrixSpace);
-   if (!costMatrix || !indexMatrix ) {
+   _costMatrix = (int*) malloc(_matrixSpace);
+   _indexMatrix = (int*) malloc(_matrixSpace);
+   if (!_costMatrix || !_indexMatrix ) {
       cerr<<"Memory allocation error"<<endl;
       if (_costMatrix) free(_costMatrix);
       if (_indexMatrix) free(_indexMatrix);
-      return 0;
+      exit(1);
    }
 }
 
-~MatrixChainMultiplication() {
+MatrixChainMultiplication::~MatrixChainMultiplication() {
    free(_costMatrix);
    free(_indexMatrix);
 }
 
-int MatrixChainMultiplication::matrixChainMultiplication (
+int MatrixChainMultiplication::optimize (
    const matrix* const matrixChain,
    size_t matrixNum
 ) {
-   _maxtrixNum = matrixNum;
-   memset(costMatrix, 0, matrixSpace);
-   memset(indexMatrix, 0, matrixSpace);
+   _matrixNum = matrixNum;
+   memset(_costMatrix, 0, _matrixSpace);
+   memset(_indexMatrix, 0, _matrixSpace);
   
    for (size_t i=0; i < _matrixNum; i++) {
       size_t x = 0, y = i;
@@ -59,45 +61,19 @@ int MatrixChainMultiplication::matrixChainMultiplication (
          }
       }
    }
-
-   printOrder(indexMatrix, 0, matrixNum - 1, matrixNum);
-   cout<<endl;
-   
-   int minimumCost = costMatrix[matrixNum - 1];
-
-   return minimumCost;
+   return _costMatrix[matrixNum - 1];
 }
 
-void printOrder(const int* const indexMatrix, int x, int y, size_t matrixNum) {
-   int index = x * matrixNum + y; 
-   if (x==y) cout<<"A"<<x;
-   else if ((x+1)==y) cout<<"(A"<<x<<'A'<<y<<')';
+string MatrixChainMultiplication::printOrder(int x, int y) const {
+   stringstream ss;
+   int index = x * _matrixNum + y; 
+   if (x==y) ss<<"A"<<x;
+   else if ((x+1)==y) ss<<"(A"<<x<<'A'<<y<<')';
    else {
-      cout<<"(";
-      printOrder(indexMatrix, x, indexMatrix[index], matrixNum);
-      printOrder(indexMatrix, indexMatrix[index] + 1, y, matrixNum);
-      cout<<")";
+      ss<<"(";
+      ss<<printOrder(x, _indexMatrix[index]);
+      ss<<printOrder(_indexMatrix[index] + 1, y);
+      ss<<")";
    }
-   return;
-}
-
-int main(int argc, char** argv) {
-   if (argc != 2) return 1;
-   int num = 0, matrix_num = 0;
-
-   FILE* in = fopen(argv[1], "r");
-   fscanf(in, "%d", &num);
-   for (int i=0; i<num; i++) {
-      fscanf(in, "%d", &matrix_num);
-      vector<matrix> testcase;
-      for (int j=0; j<matrix_num; j++) {
-         int first = 0, second = 0;
-         fscanf(in, "%d,%d", &first, &second);
-         testcase.push_back(make_pair(first, second));
-      }
-      cout<<matrixChainMultiplication(testcase)<<endl;
-      testcase.clear();
-   }
-   fclose(in);
-   return 0;
+   return ss.str();
 }

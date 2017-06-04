@@ -6,7 +6,7 @@ typedef pair<int, int> matrix;
 
 class MatrixChainMultiplication {
    public:
-      MatrixChainMultiplication(size_t): _matrixNum(0);
+      MatrixChainMultiplication(size_t);
       ~MatrixChainMultiplication();
 
       int optimize(const matrix* const, size_t);
