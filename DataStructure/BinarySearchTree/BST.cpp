@@ -42,21 +42,16 @@ void BinarySearchTree<T>::add(T v) {
 	node->_value = v;
 
 	BinaryTreeNode<T>* current_node = _root;
-	BinaryTreeNode<T>** current_node_address = &_root;
 	BinaryTreeNode<T>* parent_node = NULL;
 	while(current_node) {
 		parent_node = current_node;
-		if (current_node->_value > v) {
-			current_node_address = &current_node->_left;
-			current_node = current_node->_left;
-		}
-		else {
-			current_node_address = &current_node->_right;
-			current_node = current_node->_right;
-		}
+		if (current_node->_value > v) current_node = current_node->_left;
+		else current_node = current_node->_right;
 	}
 	node->_parent = parent_node;
-	*current_node_address = node;
+	if (!_root) _root = node;
+	else if (parent_node->_value > v) parent_node->_left = node;
+	else parent_node->_right = node;
 	return;	
 }
 
@@ -69,54 +64,22 @@ void BinarySearchTree<T>::remove(T v) {
 	}
 
 	if (current_node) {
-		if (!current_node->_left and !current_node->_right) {
-			if (current_node->_parent) {
-				transplant(current_node, NULL);
-			}
-			else {
-				_root = NULL;
-			}
-		}
-		else if (!current_node->_left) {
-			if (current_node->_parent) {
-				transplant(current_node, current_node->_right);
-				current_node->_right->_parent = current_node->_parent;
-			}
-			else {
-				_root = current_node->_right;
-				current_node->_right->_parent = NULL;
-			}
+		if (!current_node->_left) {
+			transplant(current_node, current_node->_right);
 		}
 		else if (!current_node->_right) {
-			if (current_node->_parent) {
-				transplant(current_node, current_node->_left);
-				current_node->_left->_parent = current_node->_parent;
-			}
-			else {
-				_root = current_node->_left;
-				current_node->_left->_parent = NULL;
-			}
+			transplant(current_node, current_node->_left);
 		}
 		else {
    		BinaryTreeNode<T>* successor = findSuccessor(current_node);
-			if (!successor->_right) {
-				transplant(successor, NULL);
-			}
-			else {
+			if (current_node->_right != successor) {
 				transplant(successor, successor->_right);
-				successor->_right->_parent = successor->_parent;
+				successor->_right = current_node->_right;
+				successor->_right->_parent = successor;
 			}
-
-			if (current_node->_parent) {
-				transplant(current_node, successor);
-				successor->_parent = current_node->_parent;
-			}
-			else {
-				_root = successor;
-				successor->_parent = NULL;
-			}
+			transplant(current_node, successor);
 			successor->_left = current_node->_left;
-			successor->_right = current_node->_right;
+			successor->_left->_parent = successor;
 		}
 		current_node->_left = current_node->_right = NULL;
 		delete current_node;
@@ -130,10 +93,11 @@ void BinarySearchTree<T>::transplant(
 	BinaryTreeNode<T>* dst, 
 	BinaryTreeNode<T>* value
 ) {
-	if (dst && dst->_parent) {
-		if (dst->_parent->_left == dst) dst->_parent->_left = value;
-		else dst->_parent->_right = value;
-	}
+	if (!dst->_parent) _root = value;
+	else if (dst->_parent->_left == dst) dst->_parent->_left = value;
+	else dst->_parent->_right = value;
+
+	if (value) value->_parent = dst->_parent;
 	return;
 }
 
@@ -141,8 +105,20 @@ template<typename T>
 BinaryTreeNode<T>* BinarySearchTree<T>::findSuccessor(
 	BinaryTreeNode<T>* current
 ) const {
-	while(current && current->_left) {
-		current = current->_left;
+	if (current) {
+		if (current->_right) {
+			BinaryTreeNode<T>* node = current->_right;
+			while (node->_left) node = node->_left;
+			return node;
+		}
+		else {
+			BinaryTreeNode<T>* parent = current->_parent;
+			while(parent && parent->_right == current) {
+				current = parent;
+				parent = parent->_parent;
+			}
+			return parent;
+		}
 	}
 	return current;
 }
