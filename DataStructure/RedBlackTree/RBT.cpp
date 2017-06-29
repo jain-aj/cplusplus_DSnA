@@ -243,6 +243,10 @@ void RedBlackTree<T>::deleteColorFix(
 	RedBlackNode<T>* node
 ) {
 	if (!parent) return;
+	if (node && node->_color) {
+		node->_color = false;
+		return;
+	}
 
 	RedBlackNode<T>* sibling = NULL;
 	if (parent->_left == node) {
