@@ -28,3 +28,7 @@ g++ test.cpp -o test <problem_source_code>.o -lgtest -lgtest_main
 * ### Dynamic programming
   * matrix chain multiplication
   * optimal binary search tree
+
+* ### Data structure
+  * binary search tree
+  * red black tree
