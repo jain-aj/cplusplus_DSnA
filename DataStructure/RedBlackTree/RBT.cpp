@@ -262,7 +262,6 @@ void RedBlackTree<T>::deleteColorFix(
    		bool rightColor = (sibling->_right != NULL) && sibling->_right->_color;
    		if (!leftColor && !rightColor) {
    			sibling->_color = true;
-   			parent->_color = false;
    			deleteColorFix(parent->_parent, parent);
    		}	
    		else if (leftColor) {
@@ -292,7 +291,6 @@ void RedBlackTree<T>::deleteColorFix(
    		bool rightColor = (sibling->_right != NULL) && sibling->_right->_color;
    		if (!leftColor && !rightColor) {
    			sibling->_color = true;
-   			parent->_color = false;
    			deleteColorFix(parent->_parent, parent);
    		}	
    		else if (leftColor) {

@@ -316,6 +316,15 @@ TEST_F(RedBlackTreeTest, delete_node_not_exist) {
 	);
 }
 
+TEST_F(RedBlackTreeTest, delete_single_root) {
+	tree.add(5);
+	tree.remove(5);
+	EXPECT_STREQ(
+		"",
+		tree.printTree().c_str()
+	);
+}
+
 TEST_F(RedBlackTreeTest, delete_red_leaf) {
 	tree.add(5);
 	tree.add(3);
@@ -333,12 +342,44 @@ TEST_F(RedBlackTreeTest, delete_red_leaf) {
 	);
 }
 
-TEST_F(RedBlackTreeTest, delete_single_root) {
+TEST_F(RedBlackTreeTest, delete_black_leaf) {
+	tree.add(8);
 	tree.add(5);
-	tree.remove(5);
+	tree.add(9);
+	tree.add(1);
+	tree.add(3);
+	tree.add(2);
+	tree.add(4);
+	tree.add(6);
+	tree.add(7);
+	tree.remove(9);
 	EXPECT_STREQ(
-		"",
+		" 5 3 1 2 4 7 6 8",
 		tree.printTree().c_str()
+	);
+	EXPECT_FALSE(
+		tree._root->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_right->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_right->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_right->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_right->_right->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_left->_right->_color
 	);
 }
 
@@ -368,6 +409,47 @@ TEST_F(RedBlackTreeTest, delete_red_with_right_child_successor) {
 	);
 	EXPECT_FALSE(
 		tree._root->_left->_right->_color
+	);
+}
+
+TEST_F(RedBlackTreeTest, delete_black_with_right_child_successor) {
+	tree.add(8);
+	tree.add(5);
+	tree.add(9);
+	tree.add(1);
+	tree.add(3);
+	tree.add(2);
+	tree.add(4);
+	tree.add(6);
+	tree.add(7);
+	tree.remove(5);
+	EXPECT_STREQ(
+		" 6 3 1 2 4 8 7 9",
+		tree.printTree().c_str()
+	);
+	EXPECT_FALSE(
+		tree._root->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_right->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_right->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_left->_right->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_right->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_right->_right->_color
 	);
 }
 
@@ -408,7 +490,7 @@ TEST_F(RedBlackTreeTest, delete_red_with_leaf_successor) {
 	);
 }
 
-TEST_F(RedBlackTreeTest, delete_with_successor_has_right_child) {
+TEST_F(RedBlackTreeTest, delete_black_with_leaf_successor) {
 	tree.add(8);
 	tree.add(5);
 	tree.add(9);
@@ -418,9 +500,48 @@ TEST_F(RedBlackTreeTest, delete_with_successor_has_right_child) {
 	tree.add(4);
 	tree.add(6);
 	tree.add(7);
+	tree.remove(7);
 	tree.remove(5);
 	EXPECT_STREQ(
-		" 6 3 1 2 4 8 7 9",
+		" 6 3 1 2 4 8 9",
+		tree.printTree().c_str()
+	);
+	EXPECT_FALSE(
+		tree._root->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_right->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_right->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_left->_right->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_right->_right->_color
+	);
+}
+
+TEST_F(RedBlackTreeTest, delete_black_with_right_child) {
+	tree.add(8);
+	tree.add(5);
+	tree.add(9);
+	tree.add(1);
+	tree.add(3);
+	tree.add(2);
+	tree.add(4);
+	tree.add(6);
+	tree.add(7);
+	tree.remove(1);
+	EXPECT_STREQ(
+		" 5 3 2 4 8 6 7 9",
 		tree.printTree().c_str()
 	);
 	EXPECT_FALSE(
@@ -438,13 +559,94 @@ TEST_F(RedBlackTreeTest, delete_with_successor_has_right_child) {
 	EXPECT_FALSE(
 		tree._root->_left->_right->_color
 	);
+	EXPECT_FALSE(
+		tree._root->_right->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_right->_right->_color
+	);
 	EXPECT_TRUE(
-		tree._root->_left->_left->_right->_color
+		tree._root->_right->_left->_right->_color
+	);
+}
+
+
+TEST_F(RedBlackTreeTest, delete_black_with_left_child) {
+	tree.add(8);
+	tree.add(5);
+	tree.add(9);
+	tree.add(1);
+	tree.add(3);
+	tree.add(2);
+	tree.add(4);
+	tree.add(6);
+	tree.add(7);
+	tree.add(0);
+	tree.remove(1);
+	tree.remove(2);
+	EXPECT_STREQ(
+		" 5 3 0 4 8 6 7 9",
+		tree.printTree().c_str()
+	);
+	EXPECT_FALSE(
+		tree._root->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_right->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_right->_color
 	);
 	EXPECT_FALSE(
 		tree._root->_right->_left->_color
 	);
 	EXPECT_FALSE(
+		tree._root->_right->_right->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_right->_left->_right->_color
+	);
+}
+
+TEST_F(RedBlackTreeTest, add_10_nodes_then_delete_5_nodes) {
+	tree.add(5);
+	tree.add(7);
+	tree.add(8);
+	tree.add(4);
+	tree.add(2);
+	tree.add(3);
+	tree.add(9);
+	tree.add(0);
+	tree.add(1);
+	tree.add(6);
+	tree.remove(4);
+	tree.remove(7);
+	tree.remove(6);
+	tree.remove(3);
+	tree.remove(1);
+	EXPECT_STREQ(
+		" 5 2 0 8 9",
+		tree.printTree().c_str()
+	);
+	EXPECT_FALSE(
+		tree._root->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_right->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_left->_color
+	);
+	EXPECT_TRUE(
 		tree._root->_right->_right->_color
 	);
 }
