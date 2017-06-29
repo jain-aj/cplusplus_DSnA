@@ -159,5 +159,156 @@ void RedBlackTree<T>::transplant(
 	return;
 }
 
+template<typename T>
+void RedBlackTree<T>::remove(T value) {
+	RedBlackNode<T>* current = _root;
+	while(current && current->_value != value) {
+		if (current->_value > value) {
+			current = current->_left;
+		}
+		else {
+			current = current->_right;
+		}
+	}
+
+	if (current) {
+		bool notColorFix = current->_color;
+		RedBlackNode<T>* colorFixNodeParent = current->_parent;
+		RedBlackNode<T>* colorFixNode = NULL;
+
+		if(!current->_left) {
+			transplant(current, current->_right);
+			colorFixNode = current->_right;
+		}
+		else if (!current->_right) {
+			transplant(current, current->_left);
+			colorFixNode = current->_left;
+		}
+		else {
+			RedBlackNode<T>* successor = findSuccessor(current);
+			colorFixNodeParent = successor;
+			notColorFix = successor->_color; 
+			colorFixNode = successor->_right;
+			if (successor != current->_right) {
+				colorFixNodeParent = successor->_parent;
+				if (successor->_right) {
+					transplant(successor, successor->_right);
+				}
+				current->_right->_parent = successor;
+				successor->_right = current->_right;
+			}
+			transplant(current, successor);
+			current->_left->_parent = successor;
+			successor->_left = current->_left;
+			successor->_color = current->_color;
+		}
+
+		if (!notColorFix) {
+			deleteColorFix(
+				colorFixNodeParent,
+				colorFixNode
+			);
+		}
+
+		current->_left = current->_right = NULL;
+		delete current;
+	}
+	return;
+}
+
+template<typename T>
+RedBlackNode<T>* RedBlackTree<T>::findSuccessor(
+	RedBlackNode<T>* current
+) const {
+	if (!current) return NULL;
+	if (current->_right) {
+		RedBlackNode<T>* node = current->_right;
+		while(node && node->_left) {
+			node = node->_left;
+		}
+		return node;
+	}
+	else {
+		RedBlackNode<T>* node = current->_parent;
+		while (node && node->_right == current) {
+			current = node;
+			node = current->_parent;
+		}
+		return node;
+	}
+}
+
+
+template<typename T>
+void RedBlackTree<T>::deleteColorFix(
+	RedBlackNode<T>* parent, 
+	RedBlackNode<T>* node
+) {
+	if (!parent) return;
+
+	RedBlackNode<T>* sibling = NULL;
+	if (parent->_left == node) {
+		sibling = parent->_right;
+   	if (sibling->_color) {
+			parent->_color = true;
+			sibling->_color = false;
+			leftRotate(parent, sibling);
+			deleteColorFix(parent, node);
+   	}
+   	else {
+   		bool leftColor = (sibling->_left != NULL) && sibling->_left->_color;
+   		bool rightColor = (sibling->_right != NULL) && sibling->_right->_color;
+   		if (!leftColor && !rightColor) {
+   			sibling->_color = true;
+   			parent->_color = false;
+   			deleteColorFix(parent->_parent, parent);
+   		}	
+   		else if (leftColor) {
+				sibling->_color = true;
+				sibling->_left->_color = false;
+				rightRotate(sibling, sibling->_left);
+				deleteColorFix(parent, node);
+   		}
+			else {
+				sibling->_color = parent->_color;
+				parent->_color = false;
+				sibling->_right->_color = false;
+				leftRotate(parent, sibling);
+			}
+   	}
+	}
+	else {
+		sibling = parent->_left;
+   	if (sibling->_color) {
+			parent->_color = true;
+			sibling->_color = false;
+			rightRotate(parent, sibling);
+			deleteColorFix(parent, node);
+   	}
+   	else {
+   		bool leftColor = (sibling->_left != NULL) && sibling->_left->_color;
+   		bool rightColor = (sibling->_right != NULL) && sibling->_right->_color;
+   		if (!leftColor && !rightColor) {
+   			sibling->_color = true;
+   			parent->_color = false;
+   			deleteColorFix(parent->_parent, parent);
+   		}	
+   		else if (leftColor) {
+				sibling->_color = parent->_color;
+				parent->_color = false;
+				sibling->_left->_color = false;
+				rightRotate(parent, sibling);
+   		}
+			else {
+				sibling->_color = true;
+				sibling->_right->_color = false;
+				leftRotate(sibling, sibling->_right);
+				deleteColorFix(parent, node);
+			}
+   	}
+	}
+	return;
+}
+
 template class RedBlackNode<int>;
 template class RedBlackTree<int>;

@@ -40,6 +40,7 @@ class RedBlackTree {
 		void rightRotate(RedBlackNode<T>*, RedBlackNode<T>*);
 		void leftRotate(RedBlackNode<T>*, RedBlackNode<T>*);
 		void colorFix(RedBlackNode<T>*);
+		void deleteColorFix(RedBlackNode<T>*, RedBlackNode<T>*);
 		RedBlackNode<T>* findSuccessor(RedBlackNode<T>*) const;
 		void transplant(RedBlackNode<T>*, RedBlackNode<T>*);
 
