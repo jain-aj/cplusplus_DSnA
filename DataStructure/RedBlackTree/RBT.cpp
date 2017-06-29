@@ -191,9 +191,7 @@ void RedBlackTree<T>::remove(T value) {
 			colorFixNode = successor->_right;
 			if (successor != current->_right) {
 				colorFixNodeParent = successor->_parent;
-				if (successor->_right) {
-					transplant(successor, successor->_right);
-				}
+				transplant(successor, successor->_right);
 				current->_right->_parent = successor;
 				successor->_right = current->_right;
 			}

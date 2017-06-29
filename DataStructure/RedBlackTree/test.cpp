@@ -370,3 +370,40 @@ TEST_F(RedBlackTreeTest, delete_red_with_right_child_successor) {
 		tree._root->_left->_right->_color
 	);
 }
+
+TEST_F(RedBlackTreeTest, delete_red_with_leaf_successor) {
+	tree.add(7);
+	tree.add(5);
+	tree.add(9);
+	tree.add(1);
+	tree.add(3);
+	tree.add(2);
+	tree.add(4);
+	tree.add(6);
+	tree.remove(3);
+	EXPECT_STREQ(
+		" 7 4 1 2 5 6 9",
+		tree.printTree().c_str()
+	);
+	EXPECT_FALSE(
+		tree._root->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_right->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_left->_color
+	);
+	EXPECT_FALSE(
+		tree._root->_left->_right->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_left->_right->_color
+	);
+	EXPECT_TRUE(
+		tree._root->_left->_right->_right->_color
+	);
+}
