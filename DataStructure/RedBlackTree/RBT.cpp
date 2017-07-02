@@ -242,71 +242,68 @@ void RedBlackTree<T>::deleteColorFix(
 	RedBlackNode<T>* parent, 
 	RedBlackNode<T>* node
 ) {
-	if (!parent) return;
-	if (node && node->_color) {
-		node->_color = false;
-		return;
-	}
-
-	RedBlackNode<T>* sibling = NULL;
-	if (parent->_left == node) {
-		sibling = parent->_right;
-   	if (sibling->_color) {
-			parent->_color = true;
-			sibling->_color = false;
-			leftRotate(parent, sibling);
-			deleteColorFix(parent, node);
+	while(parent && (!node || !node->_color)) {
+   	RedBlackNode<T>* sibling = NULL;
+   	if (parent->_left == node) {
+   		sibling = parent->_right;
+      	if (sibling->_color) {
+   			parent->_color = true;
+   			sibling->_color = false;
+   			leftRotate(parent, sibling);
+      	}
+      	else {
+      		bool leftColor = (sibling->_left != NULL) && sibling->_left->_color;
+      		bool rightColor = (sibling->_right != NULL) && sibling->_right->_color;
+      		if (!leftColor && !rightColor) {
+      			sibling->_color = true;
+					node = parent;
+					parent = parent->_parent;
+      		}	
+      		else if (leftColor) {
+   				sibling->_color = true;
+   				sibling->_left->_color = false;
+   				rightRotate(sibling, sibling->_left);
+      		}
+   			else {
+   				sibling->_color = parent->_color;
+   				parent->_color = false;
+   				sibling->_right->_color = false;
+   				leftRotate(parent, sibling);
+					parent = NULL;
+   			}
+      	}
    	}
    	else {
-   		bool leftColor = (sibling->_left != NULL) && sibling->_left->_color;
-   		bool rightColor = (sibling->_right != NULL) && sibling->_right->_color;
-   		if (!leftColor && !rightColor) {
-   			sibling->_color = true;
-   			deleteColorFix(parent->_parent, parent);
-   		}	
-   		else if (leftColor) {
-				sibling->_color = true;
-				sibling->_left->_color = false;
-				rightRotate(sibling, sibling->_left);
-				deleteColorFix(parent, node);
-   		}
-			else {
-				sibling->_color = parent->_color;
-				parent->_color = false;
-				sibling->_right->_color = false;
-				leftRotate(parent, sibling);
-			}
+   		sibling = parent->_left;
+      	if (sibling->_color) {
+   			parent->_color = true;
+   			sibling->_color = false;
+   			rightRotate(parent, sibling);
+      	}
+      	else {
+      		bool leftColor = (sibling->_left != NULL) && sibling->_left->_color;
+      		bool rightColor = (sibling->_right != NULL) && sibling->_right->_color;
+      		if (!leftColor && !rightColor) {
+      			sibling->_color = true;
+					node = parent;
+					parent = parent->_parent;
+      		}	
+      		else if (leftColor) {
+   				sibling->_color = parent->_color;
+   				parent->_color = false;
+   				sibling->_left->_color = false;
+   				rightRotate(parent, sibling);
+					parent = NULL;
+      		}
+   			else {
+   				sibling->_color = true;
+   				sibling->_right->_color = false;
+   				leftRotate(sibling, sibling->_right);
+   			}
+      	}
    	}
 	}
-	else {
-		sibling = parent->_left;
-   	if (sibling->_color) {
-			parent->_color = true;
-			sibling->_color = false;
-			rightRotate(parent, sibling);
-			deleteColorFix(parent, node);
-   	}
-   	else {
-   		bool leftColor = (sibling->_left != NULL) && sibling->_left->_color;
-   		bool rightColor = (sibling->_right != NULL) && sibling->_right->_color;
-   		if (!leftColor && !rightColor) {
-   			sibling->_color = true;
-   			deleteColorFix(parent->_parent, parent);
-   		}	
-   		else if (leftColor) {
-				sibling->_color = parent->_color;
-				parent->_color = false;
-				sibling->_left->_color = false;
-				rightRotate(parent, sibling);
-   		}
-			else {
-				sibling->_color = true;
-				sibling->_right->_color = false;
-				leftRotate(sibling, sibling->_right);
-				deleteColorFix(parent, node);
-			}
-   	}
-	}
+	if (node) node->_color = false;
 	return;
 }
 
