@@ -26,8 +26,8 @@ OptimalBST::~OptimalBST() {
 }
 
 float OptimalBST::optimize(
-   const float* const p, 
-   const float* const q, 
+   const float* const p,
+   const float* const q,
    size_t n
 ) {
    _cum_p[0] = p[0];
@@ -49,23 +49,23 @@ float OptimalBST::optimize(
             for (size_t s=x; s<=y; s++) {
                static float cost = 0.0;
                if (s==x) cost = sum + q[s] + _costMatrix[index + n];
-               else if (s==y) cost = sum + q[s+1] + _costMatrix[index - 1]; 
+               else if (s==y) cost = sum + q[s+1] + _costMatrix[index - 1];
                else cost = sum + _costMatrix[index - y + s - 1] + _costMatrix[index + (s + 1 - x) * n];
                if (cost < min) {
                   min = cost;
                   _costMatrix[index] = cost;
                   _indexMatrix[index] = s;
-               } 
+               }
             }
          }
       }
    }
-   return _costMatrix[n - 1];   
+   return _costMatrix[n - 1];
 }
 
 string OptimalBST::printTree(
-   size_t x, 
-   size_t y, 
+   size_t x,
+   size_t y,
    size_t n
 ) const {
    stringstream ss;
@@ -86,10 +86,10 @@ string OptimalBST::printTree(
 }
 
 void OptimalBST::drawTree(
-   size_t x, 
-   size_t y, 
-   size_t n, 
-   string indent, 
+   size_t x,
+   size_t y,
+   size_t n,
+   string indent,
    bool isRight
 ) const {
    size_t index = x * n + y;

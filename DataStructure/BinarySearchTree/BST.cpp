@@ -22,7 +22,7 @@ string BinaryTreeNode<T>::printNode() const {
    string s = string();
    if (_left) s += _left->printNode();
    s += string(" ") + to_string(_value);
-   if (_right) s += _right->printNode(); 
+   if (_right) s += _right->printNode();
    return s;
 }
 
@@ -52,14 +52,14 @@ void BinarySearchTree<T>::add(T v) {
    if (!_root) _root = node;
    else if (parent_node->_value > v) parent_node->_left = node;
    else parent_node->_right = node;
-   return;   
+   return;
 }
 
 template<typename T>
 void BinarySearchTree<T>::remove(T v) {
    BinaryTreeNode<T>* current_node = _root;
    while(current_node && current_node->_value != v) {
-      if (current_node->_value > v) current_node = current_node->_left;   
+      if (current_node->_value > v) current_node = current_node->_left;
       else current_node = current_node->_right;
    }
 
@@ -90,7 +90,7 @@ void BinarySearchTree<T>::remove(T v) {
 
 template<typename T>
 void BinarySearchTree<T>::transplant(
-   BinaryTreeNode<T>* dst, 
+   BinaryTreeNode<T>* dst,
    BinaryTreeNode<T>* value
 ) {
    if (!dst->_parent) _root = value;

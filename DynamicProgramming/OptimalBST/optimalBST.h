@@ -1,5 +1,5 @@
 #ifndef OPTIMALBST_H
-#define OPTIMALBST_H 
+#define OPTIMALBST_H
 #include <string>
 using namespace std;
 
