@@ -145,7 +145,7 @@ void RedBlackTree<T>::leftRotate(
 
 template<typename T>
 void RedBlackTree<T>::transplant(
-   RedBlackNode<T>* dst, 
+   RedBlackNode<T>* dst,
    RedBlackNode<T>* value
 ) {
    if (!dst->_parent) {
@@ -187,7 +187,7 @@ void RedBlackTree<T>::remove(T value) {
       else {
          RedBlackNode<T>* successor = findSuccessor(current);
          colorFixNodeParent = successor;
-         notColorFix = successor->_color; 
+         notColorFix = successor->_color;
          colorFixNode = successor->_right;
          if (successor != current->_right) {
             colorFixNodeParent = successor->_parent;
@@ -239,7 +239,7 @@ RedBlackNode<T>* RedBlackTree<T>::findSuccessor(
 
 template<typename T>
 void RedBlackTree<T>::deleteColorFix(
-   RedBlackNode<T>* parent, 
+   RedBlackNode<T>* parent,
    RedBlackNode<T>* node
 ) {
    while(parent && (!node || !node->_color)) {
@@ -258,7 +258,7 @@ void RedBlackTree<T>::deleteColorFix(
                sibling->_color = true;
                node = parent;
                parent = parent->_parent;
-            }   
+            }
             else if (leftColor) {
                sibling->_color = true;
                sibling->_left->_color = false;
@@ -287,7 +287,7 @@ void RedBlackTree<T>::deleteColorFix(
                sibling->_color = true;
                node = parent;
                parent = parent->_parent;
-            }   
+            }
             else if (leftColor) {
                sibling->_color = parent->_color;
                parent->_color = false;

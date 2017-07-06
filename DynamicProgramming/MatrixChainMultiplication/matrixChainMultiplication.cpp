@@ -32,7 +32,7 @@ int MatrixChainMultiplication::optimize (
    _matrixNum = matrixNum;
    memset(_costMatrix, 0, _matrixSpace);
    memset(_indexMatrix, 0, _matrixSpace);
-  
+
    for (size_t i=0; i < _matrixNum; i++) {
       size_t x = 0, y = i;
       for (y; y < _matrixNum; x++, y++) {
@@ -56,7 +56,7 @@ int MatrixChainMultiplication::optimize (
                   _costMatrix[index] = cost;
                   _indexMatrix[index] = s;
                   min = cost;
-               }               
+               }
             }
          }
       }
@@ -66,7 +66,7 @@ int MatrixChainMultiplication::optimize (
 
 string MatrixChainMultiplication::printOrder(int x, int y) const {
    stringstream ss;
-   int index = x * _matrixNum + y; 
+   int index = x * _matrixNum + y;
    if (x==y) ss<<"A"<<x;
    else if ((x+1)==y) ss<<"(A"<<x<<'A'<<y<<')';
    else {

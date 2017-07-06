@@ -15,7 +15,7 @@ class BinarySearchTree {
       void add(T);
       void remove(T);
       string printTree() const;
-   
+
    protected:
       BinaryTreeNode<T>* findSuccessor(BinaryTreeNode<T>*) const;
       void transplant(BinaryTreeNode<T>*, BinaryTreeNode<T>*);
@@ -25,12 +25,12 @@ class BinarySearchTree {
 
 template<typename T>
 class BinaryTreeNode {
-   
-   friend class BinarySearchTree<T>; 
+
+   friend class BinarySearchTree<T>;
 
    public:
       BinaryTreeNode();
-      ~BinaryTreeNode();      
+      ~BinaryTreeNode();
 
       string printNode() const;
 
