@@ -8,37 +8,37 @@ class BinaryTreeNode;
 
 template<typename T>
 class BinarySearchTree {
-	public:
-		BinarySearchTree();
-		~BinarySearchTree();
+   public:
+      BinarySearchTree();
+      ~BinarySearchTree();
 
-		void add(T);
-		void remove(T);
-		string printTree() const;
-	
-	protected:
-		BinaryTreeNode<T>* findSuccessor(BinaryTreeNode<T>*) const;
-		void transplant(BinaryTreeNode<T>*, BinaryTreeNode<T>*);
+      void add(T);
+      void remove(T);
+      string printTree() const;
+   
+   protected:
+      BinaryTreeNode<T>* findSuccessor(BinaryTreeNode<T>*) const;
+      void transplant(BinaryTreeNode<T>*, BinaryTreeNode<T>*);
 
-		BinaryTreeNode<T>* _root;
+      BinaryTreeNode<T>* _root;
 };
 
 template<typename T>
 class BinaryTreeNode {
-	
-	friend class BinarySearchTree<T>; 
+   
+   friend class BinarySearchTree<T>; 
 
-	public:
-		BinaryTreeNode();
-		~BinaryTreeNode();		
+   public:
+      BinaryTreeNode();
+      ~BinaryTreeNode();      
 
-		string printNode() const;
+      string printNode() const;
 
-	protected:
-		T _value;
-		BinaryTreeNode* _left;
-		BinaryTreeNode* _right;
-		BinaryTreeNode* _parent;
+   protected:
+      T _value;
+      BinaryTreeNode* _left;
+      BinaryTreeNode* _right;
+      BinaryTreeNode* _parent;
 };
 
 #endif
